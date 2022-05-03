@@ -9,3 +9,10 @@
 ## Auto-start the script on startup
 
 [Five Ways To Run a Program On Your Raspberry Pi At Startup](https://www.dexterindustries.com/howto/run-a-program-on-your-raspberry-pi-at-startup/)
+
+/etc/rc.local:
+```
+sudo python3 /var/www/gpio/gpio.py &
+
+exit 0
+```
