@@ -5,8 +5,8 @@ import requests
 import RPi.GPIO as GPIO
 
 GPIO.setmode(GPIO.BCM)
-GPIO_BUTTON_UP = 2
 GPIO_BUTTON_DOWN = 3
+GPIO_BUTTON_UP = 4
 
 GPIO.setup(GPIO_BUTTON_UP, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(GPIO_BUTTON_DOWN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
