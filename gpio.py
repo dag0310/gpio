@@ -16,7 +16,7 @@ def setup_gpio():
 
 def main():
     GPIO_BUTTON_UP, GPIO_BUTTON_DOWN = setup_gpio()
-    API_URL = 'http://retropie:3000/udp?command='
+    API_URL = 'http://localhost:3000/udp?command='
 
     try:
         print("Receiving button state ...\n")
