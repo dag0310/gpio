@@ -4,21 +4,16 @@ from time import sleep
 import requests
 import RPi.GPIO as GPIO
 
-def setup_gpio():
-    GPIO.setmode(GPIO.BCM)
-    GPIO_BUTTON_RED = 2
-    GPIO_BUTTON_DOWN = 3
-    GPIO_BUTTON_UP = 4
+GPIO_BUTTON_RED = 2
+GPIO_BUTTON_DOWN = 3
+GPIO_BUTTON_UP = 4
+API_URL = 'http://localhost:3000/udp?command='
 
+def main():
+    GPIO.setmode(GPIO.BCM)
     GPIO.setup(GPIO_BUTTON_RED, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(GPIO_BUTTON_UP, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(GPIO_BUTTON_DOWN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-
-    return GPIO_BUTTON_RED, GPIO_BUTTON_UP, GPIO_BUTTON_DOWN
-
-def main():
-    GPIO_BUTTON_RED, GPIO_BUTTON_UP, GPIO_BUTTON_DOWN = setup_gpio()
-    API_URL = 'http://localhost:3000/udp?command='
 
     try:
         print("Receiving button state ...\n")
