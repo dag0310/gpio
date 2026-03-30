@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import time
+from time import sleep
 import requests
 import RPi.GPIO as GPIO
 
@@ -26,19 +26,19 @@ def main():
             try:
                 if GPIO.input(GPIO_BUTTON_RED) == GPIO.LOW:
                     print("Button RED pressed.")
-                    time.sleep(1)
+                    sleep(1)
                 if GPIO.input(GPIO_BUTTON_UP) == GPIO.LOW:
                     requests.post(f"{API_URL}shutters_up")
                     print("Button UP pressed.")
-                    time.sleep(1)
+                    sleep(1)
                 if GPIO.input(GPIO_BUTTON_DOWN) == GPIO.LOW:
                     requests.post(f"{API_URL}shutters_down")
                     print("Button DOWN pressed.")
-                    time.sleep(1)
+                    sleep(1)
             except Exception as e:
                 print(f"An error occurred: {e}")
-                time.sleep(1)
-            time.sleep(0.1)
+                sleep(1)
+            sleep(0.1)
     except KeyboardInterrupt:
         print("\nScript stopped by user.")
     except Exception as e:
