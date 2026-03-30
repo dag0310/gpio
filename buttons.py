@@ -26,9 +26,12 @@ def main():
             try:
                 if GPIO.input(GPIO_BUTTON_RED) == GPIO.LOW:
                     print("\nButton RED pressed.")
-                    with open(CO2_FILEPATH, 'r') as reader:
-                        co2 = int(reader.read())
-                        display_74hc595.display_integer(co2, DISPLAY_CO2_SECONDS)
+                    try:
+                        with open(CO2_FILEPATH, 'r') as reader:
+                            co2 = int(reader.read())
+                            display_74hc595.display_integer(co2, DISPLAY_CO2_SECONDS)
+                    except Exception:
+                        display_74hc595.display_invalid(DISPLAY_CO2_SECONDS)
                     display_74hc595.display_time(DISPLAY_TIME_SECONDS)
                 if GPIO.input(GPIO_BUTTON_UP) == GPIO.LOW:
                     print("\nButton UP pressed.")
