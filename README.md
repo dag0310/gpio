@@ -3,8 +3,7 @@
 - `sudo apt update`
 - `sudo apt install python3-pip`
 - `pip3 install RPi.GPIO`
-- `chmod +x gpio.py`
-- `./gpio.py`
+- `chmod +x *.py`
 
 ## Auto-start the script on startup
 
@@ -12,7 +11,8 @@
 
 /etc/rc.local:
 ```
-sudo python3 /var/www/gpio/gpio.py &
+sudo python3 /var/www/gpio/buttons.py &
+sudo python3 /var/www/gpio/led.py &
 
 exit 0
 ```
