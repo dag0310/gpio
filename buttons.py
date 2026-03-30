@@ -6,22 +6,27 @@ import RPi.GPIO as GPIO
 
 def setup_gpio():
     GPIO.setmode(GPIO.BCM)
+    GPIO_BUTTON_RED = 2
     GPIO_BUTTON_DOWN = 3
     GPIO_BUTTON_UP = 4
 
+    GPIO.setup(GPIO_BUTTON_RED, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(GPIO_BUTTON_UP, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(GPIO_BUTTON_DOWN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-    return GPIO_BUTTON_UP, GPIO_BUTTON_DOWN
+    return GPIO_BUTTON_RED, GPIO_BUTTON_UP, GPIO_BUTTON_DOWN
 
 def main():
-    GPIO_BUTTON_UP, GPIO_BUTTON_DOWN = setup_gpio()
+    GPIO_BUTTON_RED, GPIO_BUTTON_UP, GPIO_BUTTON_DOWN = setup_gpio()
     API_URL = 'http://localhost:3000/udp?command='
 
     try:
         print("Receiving button state ...\n")
         while True:
             try:
+                if GPIO.input(GPIO_BUTTON_RED) == GPIO.LOW:
+                    print("Button RED pressed.")
+                    time.sleep(1)
                 if GPIO.input(GPIO_BUTTON_UP) == GPIO.LOW:
                     requests.post(f"{API_URL}shutters_up")
                     print("Button UP pressed.")
