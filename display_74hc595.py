@@ -15,7 +15,7 @@ data_pin = 22
 clock_pin = 17
 latch_pin = 27
 
-NUM_DIGITS = 4
+MAX_DIGITS = 4
 
 # Set list for digit segment in 8 bit. Inverted Values!
 #  AAA
@@ -125,19 +125,35 @@ def display_invalid(duration_s):
     display_string("----", duration_s)
 
 def display_string(string, duration_s):
-    if type(string) is not str or len(string) > NUM_DIGITS:
-        print(f"Invalid: '{str(string)}'")
+    if type(string) is not str:
+        print(f"Invalid string: '{str(string)}'")
         return display_invalid(duration_s)
+    digits = [digit[" "],digit[" "],digit[" "],digit[" "]]
+    digit_idx = 0
     for char in string:
         if char not in digit:
             print(f"Invalid: '{str(string)}' (character '{char}' invalid)")
             return display_invalid(duration_s)
+        if char == ".":
+            digit_idx -= 1
+            if digit_idx >= 0:
+                digits[digit_idx] = [0] + digits[digit_idx][1:8]
+        else:
+            if digit_idx >= MAX_DIGITS:
+                print(f"Invalid, too long: '{str(string)}'")
+                return display_invalid(duration_s)
+            digits[digit_idx] = digit[char]
+        digit_idx += 1
+    if digit_idx < MAX_DIGITS:
+        digits[3] = digits[digit_idx - 1] if digit_idx - 1 >= 0 else digit[" "]
+        digits[2] = digits[digit_idx - 2] if digit_idx - 2 >= 0 else digit[" "]
+        digits[1] = digits[digit_idx - 3] if digit_idx - 3 >= 0 else digit[" "]
+        digits[0] = digits[digit_idx - 4] if digit_idx - 4 >= 0 else digit[" "]
     print(f"Displaying '{string}'")
-    string = string.rjust(NUM_DIGITS, ' ')
     now = time()
     while (time() - now) <= duration_s:
         try:
-            shift_bit(data_pin, clock_pin, latch_pin, digit[string[0]], digit[string[1]], digit[string[2]], digit[string[3]])
+            shift_bit(data_pin, clock_pin, latch_pin, digits[0], digits[1], digits[2], digits[3])
         except Exception as e:
             print(e)
             shift_bit_clean()
@@ -159,7 +175,5 @@ def display_time(duration_s):
     hour_ones = hour % 10
     minute_tens = minute // 10
     minute_ones = minute % 10
-    # Add dot for second characters
-    #hour_ones_dot = [0] + digit[hour_ones][1:8]
     print("Displaying time ...")
-    display_string(f"{hour_tens}{hour_ones}{minute_tens}{minute_ones}", duration_s)
+    display_string(f"{hour_tens}{hour_ones}.{minute_tens}{minute_ones}", duration_s)
