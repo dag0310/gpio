@@ -46,7 +46,7 @@ def main():
             try:
                 with open(CO2_FILEPATH, 'r') as reader:
                     co2 = int(reader.read())
-                    print(f"CO2: {co2} ppm")
+                    # print(f"CO2: {co2} ppm")
                     set_led_status(co2 >= CO2_THRESHOLD_PPM)
             except Exception as e:
                 print(e)
