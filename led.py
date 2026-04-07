@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 
+import configparser
 from time import sleep, time
 import RPi.GPIO as GPIO
 
-CO2_FILEPATH = '/ram-dir/co2.txt'
+CO2_CONFIG_FILEPATH = '/home/pi/projects/co2/config.ini'
 GPIO_LED = 10
 POLL_SECONDS = 5
 THRESHOLD_ON_PPM_CO2 = 800
@@ -39,14 +40,18 @@ def main():
 
     GPIO.output(GPIO_LED, GPIO.LOW)
 
+    co2_config = configparser.ConfigParser()
+    co2_config.read(CO2_CONFIG_FILEPATH)
+    co2_filepath = co2_config['co2']['co2_filepath']
+
     try:
         print(f"Polling interval: {POLL_SECONDS}s")
         print(f"CO2 threshold until LED ON: {THRESHOLD_ON_PPM_CO2} ppm")
         print(f"CO2 threshold until LED OFF: {THRESHOLD_OFF_PPM_CO2} ppm")
-        print(f"CO2 filepath: {CO2_FILEPATH}")
+        print(f"CO2 filepath: {co2_filepath}")
         while True:
             try:
-                with open(CO2_FILEPATH, 'r') as reader:
+                with open(co2_filepath, 'r') as reader:
                     co2 = int(reader.read())
                     # print(f"CO2: {co2} ppm")
                     if co2 < THRESHOLD_OFF_PPM_CO2:

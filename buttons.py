@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import configparser
 from time import sleep
 import requests
 import RPi.GPIO as GPIO
@@ -9,7 +10,7 @@ GPIO_BUTTON_RED = 2
 GPIO_BUTTON_DOWN = 3
 GPIO_BUTTON_UP = 4
 API_URL = 'http://localhost:3000/udp?command='
-CO2_FILEPATH = '/ram-dir/co2.txt'
+CO2_CONFIG_FILEPATH = '/home/pi/projects/co2/config.ini'
 DISPLAY_CO2_SECONDS = 1
 DISPLAY_TIME_SECONDS = 1
 
@@ -20,6 +21,10 @@ def main():
     GPIO.setup(GPIO_BUTTON_UP, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(GPIO_BUTTON_DOWN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
+    co2_config = configparser.ConfigParser()
+    co2_config.read(CO2_CONFIG_FILEPATH)
+    co2_filepath = co2_config['co2']['co2_filepath']
+
     try:
         print("Receiving button state ...")
         while True:
@@ -27,7 +32,7 @@ def main():
                 if GPIO.input(GPIO_BUTTON_RED) == GPIO.LOW:
                     print("\nButton RED pressed.")
                     try:
-                        with open(CO2_FILEPATH, 'r') as reader:
+                        with open(co2_filepath, 'r') as reader:
                             co2 = int(reader.read())
                             display_74hc595.display_integer(co2, DISPLAY_CO2_SECONDS)
                     except Exception:
