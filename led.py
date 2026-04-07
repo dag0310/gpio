@@ -6,7 +6,8 @@ import RPi.GPIO as GPIO
 CO2_FILEPATH = '/ram-dir/co2.txt'
 GPIO_LED = 10
 POLL_SECONDS = 5
-CO2_THRESHOLD_PPM = 800
+THRESHOLD_ON_PPM_CO2 = 800
+THRESHOLD_OFF_PPM_CO2 = 450
 ERROR_FEEDBACK_AFTER_X_MINUTES = 60
 
 led_is_on = False
@@ -40,14 +41,18 @@ def main():
 
     try:
         print(f"Polling interval: {POLL_SECONDS}s")
-        print(f"CO2 threshold until LED lights up: {CO2_THRESHOLD_PPM} ppm")
+        print(f"CO2 threshold until LED ON: {THRESHOLD_ON_PPM_CO2} ppm")
+        print(f"CO2 threshold until LED OFF: {THRESHOLD_OFF_PPM_CO2} ppm")
         print(f"CO2 filepath: {CO2_FILEPATH}")
         while True:
             try:
                 with open(CO2_FILEPATH, 'r') as reader:
                     co2 = int(reader.read())
                     # print(f"CO2: {co2} ppm")
-                    set_led_status(co2 >= CO2_THRESHOLD_PPM)
+                    if co2 < THRESHOLD_OFF_PPM_CO2:
+                        set_led_status(False)
+                    elif co2 >= THRESHOLD_ON_PPM_CO2:
+                        set_led_status(True)
             except Exception as e:
                 print(e)
                 set_led_status(False)
