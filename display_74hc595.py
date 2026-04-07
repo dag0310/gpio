@@ -167,13 +167,6 @@ def display_integer(integer, duration_s):
         print(f"Invalid integer {type(integer)} with value '{str(integer)}'")
         display_invalid(duration_s)
 
-def display_time(duration_s):
-    now = datetime.now().time()
-    hour = now.hour
-    minute = now.minute
-    hour_tens = hour // 10
-    hour_ones = hour % 10
-    minute_tens = minute // 10
-    minute_ones = minute % 10
-    print("Displaying time ...")
-    display_string(f"{hour_tens}{hour_ones}.{minute_tens}{minute_ones}", duration_s)
+def display_time(duration_s, format_str="%H.%M"):
+    print(f"Displaying time ({format_str}) ...")
+    display_string(datetime.now().strftime(format_str), duration_s)
