@@ -37,7 +37,8 @@ def main():
                             display_74hc595.display_integer(co2, DISPLAY_CO2_SECONDS)
                     except Exception:
                         display_74hc595.display_invalid(DISPLAY_CO2_SECONDS)
-                    display_74hc595.display_time(DISPLAY_TIME_SECONDS)
+                    display_74hc595.display_time(DISPLAY_TIME_SECONDS, "%H.%M")
+                    display_74hc595.display_time(DISPLAY_TIME_SECONDS, "%S")
                 if GPIO.input(GPIO_BUTTON_UP) == GPIO.LOW:
                     print("\nButton UP pressed.")
                     requests.post(f"{API_URL}shutters_up")
