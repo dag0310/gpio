@@ -1,20 +1,24 @@
 #!/usr/bin/python3
 
 import configparser
+import os
 from time import sleep
 import requests
 import RPi.GPIO as GPIO
 import display_74hc595
 
-GPIO_BUTTON_RED = 2
-GPIO_BUTTON_DOWN = 3
-GPIO_BUTTON_UP = 4
-API_URL = 'http://localhost:3000/udp?command='
-CO2_CONFIG_FILEPATH = '/home/pi/projects/co2/config.ini'
-DISPLAY_CO2_SECONDS = 1
-DISPLAY_TIME_SECONDS = 1
-
 def main():
+    config = configparser.ConfigParser()
+    config.read(os.path.join(os.path.dirname(__file__), 'config.ini'))
+
+    CO2_CONFIG_FILEPATH = config['general']['CO2_CONFIG_FILEPATH']
+    GPIO_BUTTON_RED = int(config['buttons']['GPIO_BUTTON_RED'])
+    GPIO_BUTTON_DOWN = int(config['buttons']['GPIO_BUTTON_DOWN'])
+    GPIO_BUTTON_UP = int(config['buttons']['GPIO_BUTTON_UP'])
+    API_URL = config['buttons']['API_URL']
+    DISPLAY_CO2_SECONDS = int(config['buttons']['DISPLAY_CO2_SECONDS'])
+    DISPLAY_TIME_SECONDS = int(config['buttons']['DISPLAY_TIME_SECONDS'])
+
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
     GPIO.setup(GPIO_BUTTON_RED, GPIO.IN, pull_up_down=GPIO.PUD_UP)

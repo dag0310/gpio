@@ -1,20 +1,16 @@
 #!/usr/bin/python3
 
 import configparser
+import os
 from time import sleep, time
 import RPi.GPIO as GPIO
 
-CO2_CONFIG_FILEPATH = '/home/pi/projects/co2/config.ini'
-GPIO_LED = 10
-POLL_SECONDS = 5
-THRESHOLD_ON_PPM_CO2 = 800
-THRESHOLD_OFF_PPM_CO2 = 450
-ERROR_FEEDBACK_AFTER_X_MINUTES = 60
-
+GPIO_LED = None
 led_is_on = False
 
 def set_led_status(_led_is_on):
     global led_is_on
+    global GPIO_LED
     if _led_is_on == led_is_on:
         return
     led_is_on = _led_is_on
@@ -32,6 +28,17 @@ def flash_led():
     sleep(0.3)
 
 def main():
+    config = configparser.ConfigParser()
+    config.read(os.path.join(os.path.dirname(__file__), 'config.ini'))
+
+    CO2_CONFIG_FILEPATH = config['general']['CO2_CONFIG_FILEPATH']
+    global GPIO_LED
+    GPIO_LED = int(config['led']['GPIO_LED'])
+    POLL_SECONDS = int(config['led']['POLL_SECONDS'])
+    THRESHOLD_ON_PPM_CO2 = int(config['led']['THRESHOLD_ON_PPM_CO2'])
+    THRESHOLD_OFF_PPM_CO2 = int(config['led']['THRESHOLD_OFF_PPM_CO2'])
+    ERROR_FEEDBACK_AFTER_X_MINUTES = int(config['led']['ERROR_FEEDBACK_AFTER_X_MINUTES'])
+
     script_start_timestamp = time()
 
     GPIO.setmode(GPIO.BCM)
