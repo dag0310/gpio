@@ -61,10 +61,10 @@ def main():
                 with open(co2_filepath, 'r') as reader:
                     co2 = int(reader.read())
                     # print(f"CO2: {co2} ppm")
-                    if co2 < THRESHOLD_OFF_PPM_CO2:
-                        set_led_status(False)
-                    elif co2 >= THRESHOLD_ON_PPM_CO2:
+                    if co2 >= THRESHOLD_ON_PPM_CO2:
                         set_led_status(True)
+                    elif co2 < THRESHOLD_OFF_PPM_CO2:
+                        set_led_status(False)
             except Exception as e:
                 print(e)
                 set_led_status(False)
